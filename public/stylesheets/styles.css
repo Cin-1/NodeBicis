@@ -10826,3 +10826,7 @@ body {
 .footer {
   padding: 5rem 0;
 }
+
+#mainmap {
+  height: 1000px;
+}
