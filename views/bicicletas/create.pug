@@ -1,0 +1,33 @@
+//24:28
+
+extends ../layout
+
+block content
+ a(href='/bicicletas') Volver
+
+br 
+br 
+br
+h1 Nueva Bicicleta
+
+br
+br
+
+form(action='/bicicletas/create' method='post')
+label(for='id') ID:
+input#id(type='text' name='id')
+br
+label(for='color') Color:
+input#color(type='text' name='color')
+br
+label(for='model') Modelo:
+input#model(type='text' name='model')
+br
+label(for='latitud') Latitud:
+input#latitud(type='text' name='lat')
+br
+label(for='longitud') Longitud:
+input#longitud(type='text' name='lng')
+br
+br
+input.btn(type='submit' value='ok')
