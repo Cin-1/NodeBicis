@@ -16,7 +16,7 @@ exports.bicicleta_create_post = function (req, res) {
 };
 
 exports.bicicleta_update_get = function (req, res) {
-  let bici = Bicicleta.findById(req.params.id);
+  let bici = Bicicleta(req.params.id);
 
   res.render("bicicletas/update", { bici });
 };
