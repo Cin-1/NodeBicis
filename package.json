@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "devstart": "nodemon ./bin/www"
+    "devstart": "nodemon ./bin/www",
+    "test": "jasmine"
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
@@ -17,6 +18,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
+    "jasmine": "^3.6.3",
     "nodemon": "^2.0.6"
   }
 }
