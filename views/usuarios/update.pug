@@ -1,0 +1,22 @@
+extends ../layout
+
+block content
+    a(href='/bicicletas') Volver
+
+    br
+    br
+    br
+    h1 Actualizando Usuario 
+    br
+    br
+
+    form(action=`/usuarios/${usuario.id}/update` method='post')
+        label(for='nombre') Nombre:
+        input#nombre.form-control(type='text' name='nombre'  value=usuario.id class=errors.email ? 'is-invalid' : "")
+        if errors.nombre    
+                    small#nombreHelp.text-danger
+                      =  error.nombre.message
+               
+        br
+        br
+        input.btn(type='submit' value='ok')
