@@ -1,18 +1,18 @@
-var map = L.map("mainmap").setView([-34.5800677, -58.6344017], 15);
-L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+var map = L.map('main_map').setView([-34.6562108,-58.6680248], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-L.marker([-34.583813, -58.632599]).addTo(map);
+
 
 $.ajax({
-  dataType: "json",
-  url: "api/bicicletas",
-  success: function (result) {
-    console.log(result);
-    result.bicicletas.forEach((bici) => {
-      L.marker(bici.ubicacion, { title: bici.id }).addTo(map);
-    });
-  },
+    dataType: "json",
+    url: "api/bicicletas",
+    success: function(result){
+        console.log(result);
+        result.bicicletas.forEach(function(bici){
+            L.marker(bici.ubicacion, {title: bici.id}).addTo(map);
+        });
+    },
 });
