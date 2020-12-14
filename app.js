@@ -1,3 +1,4 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -38,7 +39,11 @@ var mongoose = require("mongoose");
 //const usuario = require('./models/usuario');
 //const { token } = require('morgan');
 
-var mongoDB = "mongodb://localhost/red_bicicletas";
+//var mongoDB = "mongodb://localhost/red_bicicletas";
+//mongodb+srv://cinthiamiriac:<password>@cluster0.7q2ua.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+var mongoDB = process.env.MONGO_URI;
+
 mongoose.connect(mongoDB, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -103,13 +108,11 @@ app.post("/forgotPassword", function (req, res) {
 app.get("/resetPassword/:token", function (req, res, next) {
   Token.findOne({ token: req.params.token }, function (err, token) {
     if (!token)
-      return res
-        .status(400)
-        .send({
-          type: "not-verified",
-          msg:
-            " No existe un usuario asociado al token. Verifique que su token no hay expirado.",
-        });
+      return res.status(400).send({
+        type: "not-verified",
+        msg:
+          " No existe un usuario asociado al token. Verifique que su token no hay expirado.",
+      });
 
     Usuario.findById(token._userId, function (err, usuario) {
       if (!usuario)

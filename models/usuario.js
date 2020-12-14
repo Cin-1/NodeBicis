@@ -1,14 +1,14 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
+const Reserva = require("./reserva");
 const uniqueValidator = require("mongoose-unique-validator");
-var Reserva = require("./reserva");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
-const saltRounds = 10;
 
 const Token = require("../models/token");
 const mailer = require("../mailer/mailer");
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
+const saltRounds = 10;
 
 const validateEmail = function (email) {
   const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -19,20 +19,20 @@ var usuarioSchema = new Schema({
   nombre: {
     type: String,
     trim: true,
-    require: [true, "El nombre es obligatorio"],
+    required: [true, "Este campo es obligatorio"],
   },
   email: {
     type: String,
     trim: true,
-    require: [true, "El email es obligatorio"],
+    required: [true, "Este campo es obligatorio"],
     lowercase: true,
     unique: true,
-    validate: [validateEmail, "Por favor , ingrese un email valido"],
+    validate: [validateEmail, "Por favor ingrese un correo válido"],
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/],
   },
   password: {
     type: String,
-    require: [true, "El pasword es obligatorio"],
+    required: [true, "Este campo es obligatorio"],
   },
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
@@ -43,7 +43,7 @@ var usuarioSchema = new Schema({
 });
 
 usuarioSchema.plugin(uniqueValidator, {
-  message: "El {PATH} ya existe con otro usuario.",
+  message: "El {PATH} ya existe con otro usuario",
 });
 
 usuarioSchema.pre("save", function (next) {
@@ -67,7 +67,8 @@ usuarioSchema.methods.reservar = function (biciId, desde, hasta, cb) {
   console.log(reserva);
   reserva.save(cb);
 };
-usuarioSchema.methods.enviar_email_bienvenida = function (cb) {
+
+usuarioSchema.methods.enviar_mail_bienvenida = function (cb) {
   const token = new Token({
     _userId: this.id,
     token: crypto.randomBytes(16).toString("hex"),
@@ -78,15 +79,17 @@ usuarioSchema.methods.enviar_email_bienvenida = function (cb) {
       return console.log(err.message);
     }
 
+    console.log(token.token);
+    var enlace = "http://localhost:3006" + "/token/confirmacion/" + token.token;
+
     const mailOptions = {
-      from: "no-reply@redbicicletas.com",
+      from: "no-reply@unmail.com",
       to: email_destination,
-      subject: "Verificacion de cuenta",
+      subject: "Verificación de cuenta",
       text:
-        "Hola,\n\n" +
-        "Por favor, para verificar su cuentas haga click en este link: \n" +
-        "http:localhost:3006" +
-        "/token/confirmation/" +
+        "Hola, \n\n" +
+        "Por favor, para verificar su cuenta haga click en este link: \n" +
+        "http://localhost:3006"`\/token/confirmation\/` +
         token.token +
         ".\n",
     };
@@ -95,9 +98,8 @@ usuarioSchema.methods.enviar_email_bienvenida = function (cb) {
       if (err) {
         return console.log(err.message);
       }
-
       console.log(
-        "A verification email has been send to " + email_destination + "."
+        "A verification email has been sent to " + email_destination + "."
       );
     });
   });
@@ -115,29 +117,27 @@ usuarioSchema.methods.resetPassword = function (cb) {
     }
 
     const mailOptions = {
-      from: "no-reply@redbicicletas.com",
+      from: "no-reply@BicycleNetwork.com",
       to: email_destination,
-      subject: "Reseteo de password de cuenta",
+      subject: "Password reset",
       text:
-        "Hola,\n\n" +
-        "Por favor, para resetearel password de su cuentas haga click en este link: \n" +
-        "http:localhost:3006" +
+        "Hi,\n\n" +
+        "Please click on this link to reset your account password:\n" +
+        "http://localhost:3006" +
         "/resetPassword/" +
         token.token +
-        ".\n",
+        "\n",
     };
 
     mailer.sendMail(mailOptions, function (err) {
       if (err) {
         return cb(err);
       }
-
       console.log(
-        "Se envio un mail para resetear el password a: " +
-          email_destination +
-          "."
+        "An email to reset the password was sent to" + email_destination + "."
       );
     });
+
     cb(null);
   });
 };
